@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mapa de Aliados & Competencia — Polanco/CDMX</title>
+<style>
+  :root{
+    --terracota:#A55D49;
+    --amarillo:#FEF8D8;
+    --rosa-claro:#F2DFE1;
+    --rosa-profundo:#B9646B;
+    --verde-salvia:#E9EDDB;
+    --verde-botanico:#53713F;
+    --teal-bruma:#DAE6E8;
+    --teal-tec:#3A6069;
+    --ink:#2E2622;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Georgia', 'Times New Roman', serif;
+    background:var(--amarillo);
+    color:var(--ink);
+  }
+  .utility{font-family:'Helvetica Neue', Arial, sans-serif;}
+
+  header{
+    padding:48px 6vw 32px;
+    background:var(--terracota);
+    color:var(--amarillo);
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute;
+    right:-60px; top:-60px;
+    width:260px; height:260px;
+    border-radius:50%;
+    background:var(--rosa-profundo);
+    opacity:.35;
+  }
+  header h1{
+    margin:0 0 6px;
+    font-size:clamp(28px,4vw,44px);
+    font-weight:400;
+    letter-spacing:.3px;
+    position:relative;
+  }
+  header p.eyebrow{
+    text-transform:uppercase;
+    letter-spacing:2.5px;
+    font-size:11px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    color:var(--rosa-claro);
+    margin:0 0 14px;
+    position:relative;
+  }
+  header p.sub{
+    max-width:560px;
+    font-size:15px;
+    line-height:1.55;
+    color:var(--rosa-claro);
+    position:relative;
+    margin:0;
+  }
+
+  .stats{
+    display:flex;
+    gap:28px;
+    padding:22px 6vw;
+    background:var(--rosa-profundo);
+    color:var(--amarillo);
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    flex-wrap:wrap;
+  }
+  .stat b{
+    display:block;
+    font-size:26px;
+    font-weight:700;
+  }
+  .stat span{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    opacity:.85;
+  }
+
+  .controls{
+    padding:22px 6vw 0;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  .controls .label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:var(--teal-tec);
+    margin-right:6px;
+  }
+  button.filter{
+    border:1.5px solid var(--terracota);
+    background:transparent;
+    color:var(--terracota);
+    padding:7px 16px;
+    border-radius:999px;
+    font-size:13px;
+    cursor:pointer;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    transition:all .15s ease;
+  }
+  button.filter.active{
+    background:var(--terracota);
+    color:var(--amarillo);
+  }
+  button.filter:hover{
+    background:var(--rosa-profundo);
+    border-color:var(--rosa-profundo);
+    color:var(--amarillo);
+  }
+
+  select#sortSel{
+    border:1.5px solid var(--verde-botanico);
+    color:var(--verde-botanico);
+    background:transparent;
+    padding:6px 12px;
+    border-radius:999px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:13px;
+  }
+
+  main{
+    padding:26px 6vw 70px;
+  }
+
+  .section-label{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:12px;
+    color:var(--teal-tec);
+    margin:34px 0 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--teal-tec);
+    opacity:.3;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+    gap:16px;
+  }
+
+  .card{
+    background:#fff;
+    border:1px solid var(--rosa-claro);
+    border-radius:6px;
+    padding:18px 20px;
+    position:relative;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 24px rgba(165,93,73,.15);
+  }
+  .card.fi-own{
+    border:2px solid var(--verde-botanico);
+    background:var(--verde-salvia);
+  }
+  .card .tag{
+    position:absolute;
+    top:14px; right:14px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    padding:3px 9px;
+    border-radius:999px;
+  }
+  .tag.fertilidad{background:var(--rosa-claro); color:var(--terracota);}
+  .tag.ginecologia{background:var(--teal-bruma); color:var(--teal-tec);}
+  .tag.fi{background:var(--verde-botanico); color:#fff;}
+
+  .card h3{
+    margin:0 6px 4px 0;
+    font-size:18px;
+    font-weight:600;
+    max-width:85%;
+    line-height:1.25;
+  }
+  .card .addr{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:12.5px;
+    color:#6b5f57;
+    margin-bottom:10px;
+    line-height:1.4;
+  }
+  .rating-row{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    margin-bottom:10px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  .rating-row .num{
+    font-size:20px;
+    font-weight:700;
+    color:var(--terracota);
+  }
+  .rating-row .count{
+    font-size:12px;
+    color:#8a7c73;
+  }
+  .bar-bg{
+    width:100%;
+    height:5px;
+    background:var(--rosa-claro);
+    border-radius:3px;
+    overflow:hidden;
+    margin-bottom:12px;
+  }
+  .bar-fill{
+    height:100%;
+    background:var(--verde-botanico);
+  }
+  .card .phone{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:13px;
+    color:var(--teal-tec);
+    font-weight:600;
+  }
+  .card .zone{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:11px;
+    color:#a89a90;
+    margin-top:8px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+  }
+
+  footer{
+    padding:26px 6vw 40px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:12px;
+    color:var(--teal-tec);
+    opacity:.75;
+  }
+
+  @media (max-width:640px){
+    .stats{gap:18px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Fertilidad Integral · Inteligencia de mercado</p>
+  <h1>Aliados & competencia — zona Polanco</h1>
+  <p class="sub">Directorio de clínicas de fertilidad y ginecología ubicadas en Polanco y zonas colindantes de la CDMX, para mapear posibles aliados de referidos y benchmarking de competencia directa.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><b id="statTotal">0</b><span>Lugares mapeados</span></div>
+  <div class="stat"><b id="statFert">0</b><span>Fertilidad</span></div>
+  <div class="stat"><b id="statGineco">0</b><span>Ginecología</span></div>
+  <div class="stat"><b id="statAvg">0</b><span>Rating promedio</span></div>
+</div>
+
+<div class="controls">
+  <span class="label">Filtrar</span>
+  <button class="filter active" data-filter="all">Todas</button>
+  <button class="filter" data-filter="fertilidad">Fertilidad</button>
+  <button class="filter" data-filter="ginecologia">Ginecología</button>
+  <select id="sortSel" class="utility">
+    <option value="rating">Ordenar por rating</option>
+    <option value="reviews">Ordenar por # reseñas</option>
+    <option value="name">Ordenar por nombre</option>
+  </select>
+</div>
+
+<main>
+  <div id="grid" class="grid"></div>
+</main>
+
+<footer>Datos obtenidos vía Google Places · Julio 2026 · Uso interno FI</footer>
+
+<script>
+const data = [
+  // FERTILIDAD
+  {name:"Fertilidad Integral", cat:"fertilidad", addr:"Av. Ejército Nacional 769, Piso 16, Granada", rating:4.5, reviews:106, phone:"55 9020 4903", zone:"Granada / Polanco — sede propia", own:true},
+  {name:"CITMER Medicina Reproductiva", cat:"fertilidad", addr:"Blvd. M. de Cervantes Saavedra 233, Granada", rating:4.1, reviews:253, phone:"55 2121 2631", zone:"Granada / Polanco"},
+  {name:"Procrea", cat:"fertilidad", addr:"Blvd. M. de Cervantes Saavedra 161, Granada", rating:3.9, reviews:92, phone:"55 5531 3665", zone:"Granada / Polanco"},
+  {name:"Clínica Inovavita", cat:"fertilidad", addr:"Jaime Balmes 11, Torre A, Polanco", rating:4.3, reviews:91, phone:"55 5545 6850", zone:"Polanco — fuerte en subrogación/donación"},
+  {name:"Hisparep Clínica de Reproducción Asistida", cat:"fertilidad", addr:"Av. Ejército Nacional 613, Granada", rating:4.0, reviews:33, phone:"56 4175 1455", zone:"Mismo edificio (Hospital Español)"},
+  {name:"Consulta Dr. Lozano", cat:"fertilidad", addr:"Av. Ejército Nacional 613, Piso 10, Polanco", rating:5.0, reviews:6, phone:"55 3087 8877", zone:"Mismo edificio (Hospital Español)"},
+  {name:"Hestia Fertility", cat:"fertilidad", addr:"Acueducto Río Hondo 30, Lomas de Chapultepec", rating:4.9, reviews:56, phone:"55 1169 1320", zone:"Lomas de Chapultepec"},
+  {name:"Inmater", cat:"fertilidad", addr:"Sierra Mojada 340, Lomas de Chapultepec", rating:4.6, reviews:59, phone:"55 5540 2218", zone:"Lomas de Chapultepec"},
+  {name:"Hope IVF CDMX", cat:"fertilidad", addr:"Av. Prado Norte 135, Lomas de Chapultepec", rating:4.1, reviews:68, phone:"55 6846 8180", zone:"Lomas de Chapultepec"},
+  {name:"Fertility Day", cat:"fertilidad", addr:"C. Bajío 70, Roma Sur", rating:4.8, reviews:73, phone:"55 6607 3883", zone:"Roma Sur (más lejos)"},
+  {name:"FIV - Reproducción Asistida", cat:"fertilidad", addr:"C. Venturina 28, Col. Estrella, GAM", rating:4.9, reviews:149, phone:"55 4332 2745", zone:"Gustavo A. Madero (más lejos)"},
+  {name:"Fertygen", cat:"fertilidad", addr:"Montiel 206, Lindavista Nte., GAM", rating:4.2, reviews:323, phone:"55 3519 1187", zone:"Lindavista (más lejos)"},
+  {name:"Eligen Fertility Center", cat:"fertilidad", addr:"Callao 693, Lindavista Nte., GAM", rating:4.4, reviews:88, phone:"55 6812 8679", zone:"Lindavista (más lejos)"},
+
+  // GINECOLOGÍA
+  {name:"Clínica Ginecológica Polanco", cat:"ginecologia", addr:"Av. Ejército Nacional 318, Polanco", rating:4.4, reviews:198, phone:"55 5203 9861", zone:"Polanco V Secc."},
+  {name:"Plenna Polanco", cat:"ginecologia", addr:"Juan Vázquez de Mella 481, Polanco", rating:4.6, reviews:257, phone:"55 4365 8774", zone:"Polanco — modelo boutique/concierge"},
+  {name:"AuraFem Health Care", cat:"ginecologia", addr:"Cantú 11, Anzures", rating:5.0, reviews:144, phone:"56 5756 7512", zone:"Anzures"},
+  {name:"CUIDAR - Medicina Materno Fetal", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Hospital Español", rating:5.0, reviews:122, phone:"55 7442 6084", zone:"Mismo edificio que FI"},
+  {name:"Dra. Blanca N. Rodríguez Grijalva", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Int 602", rating:4.9, reviews:186, phone:"55 8677 0525", zone:"Mismo edificio que FI"},
+  {name:"Dr. Roberto Velázquez (CUIDAR)", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Consultorio 605", rating:5.0, reviews:5, phone:"55 4368 3164", zone:"Mismo edificio que FI"},
+  {name:"Clínica Papilloma", cat:"ginecologia", addr:"Av. Homero 527, Polanco", rating:4.0, reviews:43, phone:"55 7005 8795", zone:"Polanco V Secc."},
+  {name:"Dra. Jefsi Argelia León Domínguez", cat:"ginecologia", addr:"C. Arquímedes 130, Polanco IV Secc.", rating:5.0, reviews:13, phone:"55 6544 2547", zone:"Polanco — habla inglés"},
+  {name:"Dr. Gustavo López Ruíz", cat:"ginecologia", addr:"Hospital Ángeles Santa Mónica, Temístocles 210", rating:5.0, reviews:9, phone:"55 4018 6809", zone:"Polanco IV Secc."},
+];
+
+const grid = document.getElementById('grid');
+let activeFilter = 'all';
+let sortMode = 'rating';
+
+function render(){
+  let items = data.filter(d => activeFilter === 'all' || d.cat === activeFilter);
+  items = items.slice().sort((a,b)=>{
+    if(sortMode==='rating') return b.rating - a.rating;
+    if(sortMode==='reviews') return b.reviews - a.reviews;
+    return a.name.localeCompare(b.name);
+  });
+
+  grid.innerHTML = items.map(d => `
+    <div class="card ${d.own ? 'fi-own' : ''}">
+      <span class="tag ${d.own ? 'fi' : d.cat}">${d.own ? 'FI · sede propia' : (d.cat === 'fertilidad' ? 'Fertilidad' : 'Ginecología')}</span>
+      <h3>${d.name}</h3>
+      <div class="addr">${d.addr}</div>
+      <div class="rating-row">
+        <span class="num">${d.rating.toFixed(1)}</span>
+        <span class="count">${d.reviews} reseñas</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${(d.rating/5*100).toFixed(0)}%"></div></div>
+      <div class="phone">${d.phone}</div>
+      <div class="zone">${d.zone}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('statTotal').textContent = data.length;
+  document.getElementById('statFert').textContent = data.filter(d=>d.cat==='fertilidad').length;
+  document.getElementById('statGineco').textContent = data.filter(d=>d.cat==='ginecologia').length;
+  const avg = (data.reduce((s,d)=>s+d.rating,0)/data.length).toFixed(1);
+  document.getElementById('statAvg').textContent = avg;
+}
+
+document.querySelectorAll('button.filter').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('button.filter').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+document.getElementById('sortSel').addEventListener('change', (e)=>{
+  sortMode = e.target.value;
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
