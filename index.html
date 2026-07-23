@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Mapa de Aliados & Competencia — Polanco/CDMX</title>
+<title>Mapa de Aliados & Competencia — CDMX, Puebla, Querétaro, Edomex y Veracruz</title>
 <style>
   :root{
     --terracota:#A55D49;
@@ -120,6 +120,27 @@
     background:var(--rosa-profundo);
     border-color:var(--rosa-profundo);
     color:var(--amarillo);
+  }
+
+  button.region{
+    border:1.5px solid var(--teal-tec);
+    background:transparent;
+    color:var(--teal-tec);
+    padding:7px 16px;
+    border-radius:999px;
+    font-size:13px;
+    cursor:pointer;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    transition:all .15s ease;
+  }
+  button.region.active{
+    background:var(--teal-tec);
+    color:var(--amarillo);
+  }
+  button.region:hover{
+    background:var(--teal-bruma);
+    border-color:var(--teal-tec);
+    color:var(--teal-tec);
   }
 
   select#sortSel{
@@ -265,8 +286,8 @@
 
 <header>
   <p class="eyebrow">Fertilidad Integral · Inteligencia de mercado</p>
-  <h1>Aliados & competencia — zona Polanco</h1>
-  <p class="sub">Directorio de clínicas de fertilidad y ginecología ubicadas en Polanco y zonas colindantes de la CDMX, para mapear posibles aliados de referidos y benchmarking de competencia directa.</p>
+  <h1>Aliados & competencia — cobertura nacional</h1>
+  <p class="sub">Directorio de clínicas de fertilidad y ginecología en CDMX (Polanco y alrededores), Puebla, Querétaro, Estado de México y Veracruz, para mapear posibles aliados de referidos y benchmarking de competencia directa.</p>
 </header>
 
 <div class="stats">
@@ -277,10 +298,19 @@
 </div>
 
 <div class="controls">
-  <span class="label">Filtrar</span>
+  <span class="label">Categoría</span>
   <button class="filter active" data-filter="all">Todas</button>
   <button class="filter" data-filter="fertilidad">Fertilidad</button>
   <button class="filter" data-filter="ginecologia">Ginecología</button>
+</div>
+<div class="controls" style="padding-top:10px;">
+  <span class="label">Región</span>
+  <button class="region active" data-region="all">Todas</button>
+  <button class="region" data-region="CDMX">CDMX</button>
+  <button class="region" data-region="Puebla">Puebla</button>
+  <button class="region" data-region="Querétaro">Querétaro</button>
+  <button class="region" data-region="Edomex">Edomex</button>
+  <button class="region" data-region="Veracruz">Veracruz</button>
   <select id="sortSel" class="utility">
     <option value="rating">Ordenar por rating</option>
     <option value="reviews">Ordenar por # reseñas</option>
@@ -296,39 +326,109 @@
 
 <script>
 const data = [
-  // FERTILIDAD
-  {name:"Fertilidad Integral", cat:"fertilidad", addr:"Av. Ejército Nacional 769, Piso 16, Granada", rating:4.5, reviews:106, phone:"55 9020 4903", zone:"Granada / Polanco — sede propia", own:true},
-  {name:"CITMER Medicina Reproductiva", cat:"fertilidad", addr:"Blvd. M. de Cervantes Saavedra 233, Granada", rating:4.1, reviews:253, phone:"55 2121 2631", zone:"Granada / Polanco"},
-  {name:"Procrea", cat:"fertilidad", addr:"Blvd. M. de Cervantes Saavedra 161, Granada", rating:3.9, reviews:92, phone:"55 5531 3665", zone:"Granada / Polanco"},
-  {name:"Clínica Inovavita", cat:"fertilidad", addr:"Jaime Balmes 11, Torre A, Polanco", rating:4.3, reviews:91, phone:"55 5545 6850", zone:"Polanco — fuerte en subrogación/donación"},
-  {name:"Hisparep Clínica de Reproducción Asistida", cat:"fertilidad", addr:"Av. Ejército Nacional 613, Granada", rating:4.0, reviews:33, phone:"56 4175 1455", zone:"Mismo edificio (Hospital Español)"},
-  {name:"Consulta Dr. Lozano", cat:"fertilidad", addr:"Av. Ejército Nacional 613, Piso 10, Polanco", rating:5.0, reviews:6, phone:"55 3087 8877", zone:"Mismo edificio (Hospital Español)"},
-  {name:"Hestia Fertility", cat:"fertilidad", addr:"Acueducto Río Hondo 30, Lomas de Chapultepec", rating:4.9, reviews:56, phone:"55 1169 1320", zone:"Lomas de Chapultepec"},
-  {name:"Inmater", cat:"fertilidad", addr:"Sierra Mojada 340, Lomas de Chapultepec", rating:4.6, reviews:59, phone:"55 5540 2218", zone:"Lomas de Chapultepec"},
-  {name:"Hope IVF CDMX", cat:"fertilidad", addr:"Av. Prado Norte 135, Lomas de Chapultepec", rating:4.1, reviews:68, phone:"55 6846 8180", zone:"Lomas de Chapultepec"},
-  {name:"Fertility Day", cat:"fertilidad", addr:"C. Bajío 70, Roma Sur", rating:4.8, reviews:73, phone:"55 6607 3883", zone:"Roma Sur (más lejos)"},
-  {name:"FIV - Reproducción Asistida", cat:"fertilidad", addr:"C. Venturina 28, Col. Estrella, GAM", rating:4.9, reviews:149, phone:"55 4332 2745", zone:"Gustavo A. Madero (más lejos)"},
-  {name:"Fertygen", cat:"fertilidad", addr:"Montiel 206, Lindavista Nte., GAM", rating:4.2, reviews:323, phone:"55 3519 1187", zone:"Lindavista (más lejos)"},
-  {name:"Eligen Fertility Center", cat:"fertilidad", addr:"Callao 693, Lindavista Nte., GAM", rating:4.4, reviews:88, phone:"55 6812 8679", zone:"Lindavista (más lejos)"},
+  // ===== CDMX — FERTILIDAD =====
+  {name:"Fertilidad Integral", region:"CDMX", cat:"fertilidad", addr:"Av. Ejército Nacional 769, Piso 16, Granada", rating:4.5, reviews:106, phone:"55 9020 4903", zone:"Granada / Polanco — sede propia", own:true},
+  {name:"CITMER Medicina Reproductiva", region:"CDMX", cat:"fertilidad", addr:"Blvd. M. de Cervantes Saavedra 233, Granada", rating:4.1, reviews:253, phone:"55 2121 2631", zone:"Granada / Polanco"},
+  {name:"Procrea", region:"CDMX", cat:"fertilidad", addr:"Blvd. M. de Cervantes Saavedra 161, Granada", rating:3.9, reviews:92, phone:"55 5531 3665", zone:"Granada / Polanco"},
+  {name:"Clínica Inovavita", region:"CDMX", cat:"fertilidad", addr:"Jaime Balmes 11, Torre A, Polanco", rating:4.3, reviews:91, phone:"55 5545 6850", zone:"Polanco — fuerte en subrogación/donación"},
+  {name:"Hisparep Clínica de Reproducción Asistida", region:"CDMX", cat:"fertilidad", addr:"Av. Ejército Nacional 613, Granada", rating:4.0, reviews:33, phone:"56 4175 1455", zone:"Mismo edificio (Hospital Español)"},
+  {name:"Consulta Dr. Lozano", region:"CDMX", cat:"fertilidad", addr:"Av. Ejército Nacional 613, Piso 10, Polanco", rating:5.0, reviews:6, phone:"55 3087 8877", zone:"Mismo edificio (Hospital Español)"},
+  {name:"Hestia Fertility", region:"CDMX", cat:"fertilidad", addr:"Acueducto Río Hondo 30, Lomas de Chapultepec", rating:4.9, reviews:56, phone:"55 1169 1320", zone:"Lomas de Chapultepec"},
+  {name:"Inmater", region:"CDMX", cat:"fertilidad", addr:"Sierra Mojada 340, Lomas de Chapultepec", rating:4.6, reviews:59, phone:"55 5540 2218", zone:"Lomas de Chapultepec"},
+  {name:"Hope IVF CDMX", region:"CDMX", cat:"fertilidad", addr:"Av. Prado Norte 135, Lomas de Chapultepec", rating:4.1, reviews:68, phone:"55 6846 8180", zone:"Lomas de Chapultepec"},
+  {name:"Fertility Day", region:"CDMX", cat:"fertilidad", addr:"C. Bajío 70, Roma Sur", rating:4.8, reviews:73, phone:"55 6607 3883", zone:"Roma Sur"},
+  {name:"FIV - Reproducción Asistida", region:"CDMX", cat:"fertilidad", addr:"C. Venturina 28, Col. Estrella, GAM", rating:4.9, reviews:149, phone:"55 4332 2745", zone:"Gustavo A. Madero"},
+  {name:"Fertygen", region:"CDMX", cat:"fertilidad", addr:"Montiel 206, Lindavista Nte., GAM", rating:4.2, reviews:323, phone:"55 3519 1187", zone:"Lindavista"},
+  {name:"Eligen Fertility Center", region:"CDMX", cat:"fertilidad", addr:"Callao 693, Lindavista Nte., GAM", rating:4.4, reviews:88, phone:"55 6812 8679", zone:"Lindavista"},
+  {name:"Embriofertyl - Centro De Fertilidad", region:"CDMX", cat:"fertilidad", addr:"Cto. Arquitectos 1, Cd. Satélite, Naucalpan", rating:4.0, reviews:86, phone:"55 3640 6801", zone:"Naucalpan"},
+  {name:"Vitafem - Dr. Juan José Suárez Gutiérrez", region:"CDMX", cat:"fertilidad", addr:"Av. Lomas Verdes 750, Naucalpan", rating:5.0, reviews:1, phone:"55 5344 0130", zone:"Naucalpan"},
 
-  // GINECOLOGÍA
-  {name:"Clínica Ginecológica Polanco", cat:"ginecologia", addr:"Av. Ejército Nacional 318, Polanco", rating:4.4, reviews:198, phone:"55 5203 9861", zone:"Polanco V Secc."},
-  {name:"Plenna Polanco", cat:"ginecologia", addr:"Juan Vázquez de Mella 481, Polanco", rating:4.6, reviews:257, phone:"55 4365 8774", zone:"Polanco — modelo boutique/concierge"},
-  {name:"AuraFem Health Care", cat:"ginecologia", addr:"Cantú 11, Anzures", rating:5.0, reviews:144, phone:"56 5756 7512", zone:"Anzures"},
-  {name:"CUIDAR - Medicina Materno Fetal", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Hospital Español", rating:5.0, reviews:122, phone:"55 7442 6084", zone:"Mismo edificio que FI"},
-  {name:"Dra. Blanca N. Rodríguez Grijalva", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Int 602", rating:4.9, reviews:186, phone:"55 8677 0525", zone:"Mismo edificio que FI"},
-  {name:"Dr. Roberto Velázquez (CUIDAR)", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Consultorio 605", rating:5.0, reviews:5, phone:"55 4368 3164", zone:"Mismo edificio que FI"},
-  {name:"Clínica Papilloma", cat:"ginecologia", addr:"Av. Homero 527, Polanco", rating:4.0, reviews:43, phone:"55 7005 8795", zone:"Polanco V Secc."},
-  {name:"Dra. Jefsi Argelia León Domínguez", cat:"ginecologia", addr:"C. Arquímedes 130, Polanco IV Secc.", rating:5.0, reviews:13, phone:"55 6544 2547", zone:"Polanco — habla inglés"},
-  {name:"Dr. Gustavo López Ruíz", cat:"ginecologia", addr:"Hospital Ángeles Santa Mónica, Temístocles 210", rating:5.0, reviews:9, phone:"55 4018 6809", zone:"Polanco IV Secc."},
+  // ===== CDMX — GINECOLOGÍA =====
+  {name:"Clínica Ginecológica Polanco", region:"CDMX", cat:"ginecologia", addr:"Av. Ejército Nacional 318, Polanco", rating:4.4, reviews:198, phone:"55 5203 9861", zone:"Polanco V Secc."},
+  {name:"Plenna Polanco", region:"CDMX", cat:"ginecologia", addr:"Juan Vázquez de Mella 481, Polanco", rating:4.6, reviews:257, phone:"55 4365 8774", zone:"Polanco — modelo boutique/concierge"},
+  {name:"AuraFem Health Care", region:"CDMX", cat:"ginecologia", addr:"Cantú 11, Anzures", rating:5.0, reviews:144, phone:"56 5756 7512", zone:"Anzures"},
+  {name:"CUIDAR - Medicina Materno Fetal", region:"CDMX", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Hospital Español", rating:5.0, reviews:122, phone:"55 7442 6084", zone:"Mismo edificio que FI"},
+  {name:"Dra. Blanca N. Rodríguez Grijalva", region:"CDMX", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Int 602", rating:4.9, reviews:186, phone:"55 8677 0525", zone:"Mismo edificio que FI"},
+  {name:"Dr. Roberto Velázquez (CUIDAR)", region:"CDMX", cat:"ginecologia", addr:"Av. Ejército Nacional 613, Consultorio 605", rating:5.0, reviews:5, phone:"55 4368 3164", zone:"Mismo edificio que FI"},
+  {name:"Clínica Papilloma", region:"CDMX", cat:"ginecologia", addr:"Av. Homero 527, Polanco", rating:4.0, reviews:43, phone:"55 7005 8795", zone:"Polanco V Secc."},
+  {name:"Dra. Jefsi Argelia León Domínguez", region:"CDMX", cat:"ginecologia", addr:"C. Arquímedes 130, Polanco IV Secc.", rating:5.0, reviews:13, phone:"55 6544 2547", zone:"Polanco — habla inglés"},
+  {name:"Dr. Gustavo López Ruíz", region:"CDMX", cat:"ginecologia", addr:"Hospital Ángeles Santa Mónica, Temístocles 210", rating:5.0, reviews:9, phone:"55 4018 6809", zone:"Polanco IV Secc."},
+  {name:"GYN Clínica de la Mujer Unidad Satélite", region:"CDMX", cat:"ginecologia", addr:"Cto Científicos 13, Cd. Satélite, Naucalpan", rating:4.7, reviews:112, phone:"55 3622 1445", zone:"Naucalpan"},
+  {name:"ESPOSIBLE Satélite", region:"CDMX", cat:"ginecologia", addr:"Enrique Sada Muguerza 16, Cd. Satélite, Naucalpan", rating:5.0, reviews:6, phone:"55 5374 3062", zone:"Naucalpan"},
+  {name:"Torre Médica Gyne esMujer", region:"CDMX", cat:"ginecologia", addr:"Perif. Blvd. M. Ávila Camacho 59, Tlalnepantla", rating:5.0, reviews:6, phone:"55 2345 2752", zone:"Tlalnepantla"},
+
+  // ===== PUEBLA — FERTILIDAD =====
+  {name:"Ingenes Puebla", region:"Puebla", cat:"fertilidad", addr:"Atlixcáyotl 6514, San Bernardino Tlaxcalancingo", rating:4.8, reviews:405, phone:"55 4746 8547", zone:"Cadena nacional — muy fuerte"},
+  {name:"Unilive Centro de Reproducción Asistida", region:"Puebla", cat:"fertilidad", addr:"Atlixcáyotl 1499-A, Edif. Valcob", rating:4.1, reviews:53, phone:"221 426 4989", zone:"San Bernardino Tlaxcalancingo"},
+  {name:"Clínica de Fertilidad Puebla y Reproducción Asistida", region:"Puebla", cat:"fertilidad", addr:"Av. Juárez 2925, Piso 13, La Paz", rating:4.4, reviews:10, phone:"222 249 1277", zone:"Centro — Torre JV Juárez"},
+  {name:"Creafam", region:"Puebla", cat:"fertilidad", addr:"Frente a Hospital Puebla, Atlixcáyotl", rating:4.2, reviews:46, phone:"222 225 1122", zone:"San Andrés Cholula — fertilidad + ginecología"},
+  {name:"CITMER Medicina Reproductiva", region:"Puebla", cat:"fertilidad", addr:"Torre JV Juárez, Av. Juárez 2925, Piso 13", rating:4.4, reviews:47, phone:"222 967 1648", zone:"La Paz"},
+  {name:"Centro de Ginecología y Reproducción Asistida", region:"Puebla", cat:"fertilidad", addr:"Av 21 Pte 3713, Belisario Domínguez", rating:3.6, reviews:33, phone:"222 296 6382", zone:"Dr. Marino — mixto fertilidad/gineco"},
+
+  // ===== PUEBLA — GINECOLOGÍA =====
+  {name:"Biofem - Dra. Tannia Paulina Caro Gómez", region:"Puebla", cat:"ginecologia", addr:"Río Pánuco 5543, Jardines de San Manuel", rating:4.7, reviews:113, phone:"221 415 7729", zone:"Jardines de San Manuel"},
+  {name:"Dr. David Eduardo Figueroa Montero", region:"Puebla", cat:"ginecologia", addr:"Hospital Ángeles Puebla, Av. Kepler 2143", rating:5.0, reviews:49, phone:"221 569 1434", zone:"Reserva Atlixcáyotl"},
+  {name:"Dr. David Morales Zenteno", region:"Puebla", cat:"ginecologia", addr:"Hospital Puebla, Priv. de las Ramblas 4", rating:5.0, reviews:258, phone:"222 175 1380", zone:"Reserva Atlixcáyotl — materno-fetal"},
+  {name:"Dr. Arturo Simont Zerón", region:"Puebla", cat:"ginecologia", addr:"Av. Kepler 2143, Reserva Atlixcáyotl", rating:4.9, reviews:123, phone:"220 171 7285", zone:"Reserva Atlixcáyotl"},
+  {name:"Central Gineco-Obstetrical, S.A. de C.V.", region:"Puebla", cat:"ginecologia", addr:"C. 13 Sur 1905, Barrio de Santiago", rating:4.0, reviews:96, phone:"222 237 1050", zone:"Hospital — Barrio de Santiago"},
+  {name:"Dr. Luis Ángel Trujillo Rizo", region:"Puebla", cat:"ginecologia", addr:"Priv. de las Ramblas 4, Reserva Atlixcáyotl", rating:5.0, reviews:30, phone:"222 115 5509", zone:"Reserva Atlixcáyotl"},
+  {name:"Clínica Acércate Puebla", region:"Puebla", cat:"ginecologia", addr:"C. 13 Sur 1907, Santiago", rating:4.9, reviews:504, phone:"55 4955 2790", zone:"Volumen alto — 504 reseñas"},
+
+  // ===== QUERÉTARO — FERTILIDAD =====
+  {name:"Ingenes Querétaro", region:"Querétaro", cat:"fertilidad", addr:"Paseo Monte Miranda Ote. 5, Piamonte", rating:4.7, reviews:278, phone:"55 4746 8547", zone:"Cadena nacional — muy fuerte"},
+  {name:"FERTILITE Querétaro", region:"Querétaro", cat:"fertilidad", addr:"Priv. Ignacio Zaragoza 16, Centro", rating:5.0, reviews:11, phone:"442 606 3733", zone:"Centro"},
+  {name:"INSEFER Instituto de Fertilidad Querétaro", region:"Querétaro", cat:"fertilidad", addr:"Manuel Gómez Morín 3870, Centro Sur", rating:4.6, reviews:186, phone:"442 229 3168", zone:"Centro Sur — ojo: reseñas de alerta por prácticas comerciales"},
+  {name:"CIRH", region:"Querétaro", cat:"fertilidad", addr:"Juan Caballero y Osio 397, Hércules", rating:5.0, reviews:12, phone:"442 234 7668", zone:"Hércules — Dr. Sidney Solís"},
+  {name:"Dr. Alberto Felgueres Hermida", region:"Querétaro", cat:"fertilidad", addr:"Hospital Ángeles, Centro Sur", rating:5.0, reviews:198, phone:"442 831 2300", zone:"Centro Sur — atiende en inglés"},
+  {name:"Gerania - Reproducción Asistida y Gestación Sustituta", region:"Querétaro", cat:"fertilidad", addr:"Av. Constituyentes 302, Torre 3, El Jacal", rating:5.0, reviews:1, phone:"442 629 0380", zone:"El Jacal — también maneja subrogación"},
+  {name:"Médica Fértil", region:"Querétaro", cat:"fertilidad", addr:"Blvd. Bernardo Quintana 9670, Centro Sur", rating:4.4, reviews:27, phone:"442 215 4624", zone:"Centro Sur"},
+
+  // ===== QUERÉTARO — GINECOLOGÍA =====
+  {name:"Gynemer - Ginecóloga en Querétaro", region:"Querétaro", cat:"ginecologia", addr:"Manufactura 48, Álamos 2da Secc.", rating:4.8, reviews:83, phone:"442 244 3040", zone:"Álamos"},
+  {name:"Dra. Cristela Cruz Cabrera", region:"Querétaro", cat:"ginecologia", addr:"Ignacio Zaragoza Pte 16-B, Torre 3, Centro", rating:5.0, reviews:10, phone:"442 196 8016", zone:"Centro"},
+  {name:"Dra. Paulina Cabrera", region:"Querétaro", cat:"ginecologia", addr:"Priv. Ignacio Zaragoza 16, Centro", rating:5.0, reviews:617, phone:"442 465 7354", zone:"Centro — volumen muy alto, 617 reseñas"},
+  {name:"Dr. Andrade Trejo Alberto", region:"Querétaro", cat:"ginecologia", addr:"Av. de las Fuentes 2200, Los Sauces", rating:4.7, reviews:95, phone:"442 266 2821", zone:"Los Sauces"},
+  {name:"Dra. Socorro Bonilla", region:"Querétaro", cat:"ginecologia", addr:"Av. Constituyentes 302, Torre 3, El Jacal", rating:4.3, reviews:42, phone:"442 780 0712", zone:"El Jacal"},
+
+  // ===== EDOMEX (Toluca/Metepec) — FERTILIDAD =====
+  {name:"Fertilidad Integral (Metepec)", region:"Edomex", cat:"fertilidad", addr:"Plaza San Patricio, Av. Tecnológico 601, Piso 2", rating:4.8, reviews:16, phone:"55 9020 4903", zone:"Metepec — sede propia", own:true},
+  {name:"Ingenes Toluca", region:"Edomex", cat:"fertilidad", addr:"Av. Ignacio Comonfort 1300, La Providencia", rating:4.7, reviews:184, phone:"55 4746 8501", zone:"Cadena nacional"},
+  {name:"Clínica de Fertilidad en Toluca - Dr. Gustavo Cruz Alarcón", region:"Edomex", cat:"fertilidad", addr:"Hospital Médica MIA, Blvd. Miguel Alemán 57", rating:5.0, reviews:44, phone:"722 138 1574", zone:"Parque Industrial Lerma"},
+  {name:"Clínica Infertilidad Toluca", region:"Edomex", cat:"fertilidad", addr:"Priv. Pedro Ascencio, Santa Cruz", rating:4.8, reviews:8, phone:"722 210 5660", zone:"Santa Cruz — Dr. Julián"},
+  {name:"Clínica Luna", region:"Edomex", cat:"fertilidad", addr:"Av. Prof. H. Enríquez 4 Sur 1502, Azteca", rating:5.0, reviews:73, phone:"722 559 8788", zone:"Azteca — Dr. Ricardo Josué Acuña"},
+
+  // ===== EDOMEX (Toluca/Metepec) — GINECOLOGÍA =====
+  {name:"Consultorio de Ginecología y Obstetricia CAI Metepec", region:"Edomex", cat:"ginecologia", addr:"Plaza Venecia, Calle Pedro Ascencio 529", rating:4.9, reviews:83, phone:"722 320 7429", zone:"Metepec — Dr. Carlos Massud"},
+  {name:"Reina Madre Hospital Toluca", region:"Edomex", cat:"ginecologia", addr:"Av. Paseo Tollocan 402", rating:4.7, reviews:3907, phone:"55 8526 6020", zone:"Hospital grande — volumen muy alto"},
+  {name:"Consultorio de Ginecología y Obstetricia | Dr. Rodríguez", region:"Edomex", cat:"ginecologia", addr:"Torre Mila, Av. J.M. Morelos y P. 4 Ote 600", rating:5.0, reviews:245, phone:"720 881 4307", zone:"Centro Toluca"},
+  {name:"Dra. Berenice García", region:"Edomex", cat:"ginecologia", addr:"Medicentro Tollocan, Av. Paseo Tollocan 800", rating:5.0, reviews:35, phone:"722 221 1116", zone:"Centro Toluca"},
+  {name:"GEMMAE Ginecólogos", region:"Edomex", cat:"ginecologia", addr:"C. Prol. Tenancingo 110", rating:4.6, reviews:252, phone:"722 175 6692", zone:"Dr. Jesús González Cárdenas"},
+
+  // ===== VERACRUZ — FERTILIDAD =====
+  {name:"Centro FiVER", region:"Veracruz", cat:"fertilidad", addr:"Mercurio 51, Jardines de Mocambo", rating:4.6, reviews:246, phone:"229 112 7000", zone:"Jardines de Mocambo — Dr. Fuster, volumen alto"},
+  {name:"Ingenes Veracruz", region:"Veracruz", cat:"fertilidad", addr:"Blvd. Adolfo Ruíz Cortines 2202, Costa de Oro", rating:4.8, reviews:64, phone:"55 4746 8547", zone:"Cadena nacional"},
+  {name:"Cedigine In Vitro Fertilization", region:"Veracruz", cat:"fertilidad", addr:"Grijalva 174, Reforma", rating:4.2, reviews:17, phone:"229 937 6797", zone:"Reforma"},
+  {name:"Creafam (Boca del Río)", region:"Veracruz", cat:"fertilidad", addr:"Barco Viejo 4750, Torre Exertia, Mocambo", rating:4.8, reviews:5, phone:"229 130 7477", zone:"Boca del Río — mismo grupo que Puebla"},
+  {name:"Fertygen Veracruz", region:"Veracruz", cat:"fertilidad", addr:"Av. Las Américas 140, Piso 17", rating:5.0, reviews:7, phone:"55 3519 1187", zone:"Las Américas"},
+
+  // ===== VERACRUZ — GINECOLOGÍA =====
+  {name:"Consultorio Dra. Francisca Torres", region:"Veracruz", cat:"ginecologia", addr:"C. Horacio Díaz Correa 193, Ignacio Zaragoza", rating:5.0, reviews:24, phone:"229 980 6587", zone:"Ignacio Zaragoza"},
+  {name:"G&O Integral Ginecología y Obstetricia", region:"Veracruz", cat:"ginecologia", addr:"C. Heriberto Jara Corona 576, Reforma", rating:5.0, reviews:15, phone:"229 347 8738", zone:"Reforma"},
+  {name:"Maternidad Villa Rica", region:"Veracruz", cat:"ginecologia", addr:"Alacio Pérez 1692, Venustiano Carranza", rating:4.5, reviews:68, phone:"229 932 5454", zone:"Venustiano Carranza — hospital"},
+  {name:"Dra. Doris María Castillo Gutiérrez", region:"Veracruz", cat:"ginecologia", addr:"Hospital Español de Veracruz, Av. 16 de Septiembre 955", rating:5.0, reviews:5, phone:"229 590 5177", zone:"Hospital Español"},
+  {name:"Dr. Giovanni Soto Solana", region:"Veracruz", cat:"ginecologia", addr:"Circuito Nuevo Veracruz 835, El Laurelal", rating:4.9, reviews:29, phone:"229 724 2043", zone:"El Laurelal — endoscopia ginecológica"},
 ];
 
 const grid = document.getElementById('grid');
 let activeFilter = 'all';
+let activeRegion = 'all';
 let sortMode = 'rating';
 
 function render(){
-  let items = data.filter(d => activeFilter === 'all' || d.cat === activeFilter);
+  let items = data.filter(d =>
+    (activeFilter === 'all' || d.cat === activeFilter) &&
+    (activeRegion === 'all' || d.region === activeRegion)
+  );
   items = items.slice().sort((a,b)=>{
     if(sortMode==='rating') return b.rating - a.rating;
     if(sortMode==='reviews') return b.reviews - a.reviews;
@@ -339,7 +439,7 @@ function render(){
     <div class="card ${d.own ? 'fi-own' : ''}">
       <span class="tag ${d.own ? 'fi' : d.cat}">${d.own ? 'FI · sede propia' : (d.cat === 'fertilidad' ? 'Fertilidad' : 'Ginecología')}</span>
       <h3>${d.name}</h3>
-      <div class="addr">${d.addr}</div>
+      <div class="addr">${d.region} · ${d.addr}</div>
       <div class="rating-row">
         <span class="num">${d.rating.toFixed(1)}</span>
         <span class="count">${d.reviews} reseñas</span>
@@ -362,6 +462,15 @@ document.querySelectorAll('button.filter').forEach(btn=>{
     document.querySelectorAll('button.filter').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     activeFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+document.querySelectorAll('button.region').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('button.region').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeRegion = btn.dataset.region;
     render();
   });
 });
